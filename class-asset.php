@@ -23,26 +23,20 @@ class Asset {
 	 *
 	 * @var string
 	 */
-	protected $media = null;
+	protected $media;
 
 	/**
 	 * Enqueue on frontend.
-	 *
-	 * @var bool
 	 */
 	protected bool $frontend = true;
 
 	/**
 	 * Enqueue in the admin area.
-	 *
-	 * @var bool
 	 */
 	protected bool $admin = true;
 
 	/**
 	 * Enqueue in the block editor area.
-	 *
-	 * @var bool
 	 */
 	protected bool $block_editor = false;
 
@@ -77,8 +71,6 @@ class Asset {
 
 	/**
 	 * Set an asset to load with async.
-	 *
-	 * @return static
 	 */
 	public function async(): Asset {
 		if ( Load_Method::DEFER === $this->load_method ) {
@@ -92,8 +84,6 @@ class Asset {
 
 	/**
 	 * Set an asset to load with async.
-	 *
-	 * @return static
 	 */
 	public function sync(): Asset {
 		$this->load_method = Load_Method::SYNC;
@@ -102,8 +92,6 @@ class Asset {
 
 	/**
 	 * Defer a script.
-	 *
-	 * @return static
 	 */
 	public function defer(): Asset {
 		if ( Load_Method::ASYNC === $this->load_method || Load_Method::ASYNC_DEFER === $this->load_method ) {
@@ -119,7 +107,6 @@ class Asset {
 	 * Condition to load the asset.
 	 *
 	 * @param string|array $condition Condition to load.
-	 * @return static
 	 */
 	public function condition( $condition ): Asset {
 		$this->condition = $condition;
@@ -128,8 +115,6 @@ class Asset {
 
 	/**
 	 * Load the asset in the header.
-	 *
-	 * @return Asset
 	 */
 	public function header(): Asset {
 		$this->load_hook = Load_Hook::HEADER;
@@ -138,8 +123,6 @@ class Asset {
 
 	/**
 	 * Load the asset in the footer.
-	 *
-	 * @return Asset
 	 */
 	public function footer(): Asset {
 		$this->load_hook = Load_Hook::FOOTER;
@@ -150,7 +133,6 @@ class Asset {
 	 * Load the asset on a specific hook.
 	 *
 	 * @param string $hook Hook to load on.
-	 * @return Asset
 	 */
 	public function hook( string $hook ): Asset {
 		$this->load_hook = $hook;
@@ -161,7 +143,6 @@ class Asset {
 	 * Set the version of the asset.
 	 *
 	 * @param string|null $version Version to set.
-	 * @return Asset
 	 */
 	public function version( ?string $version ): Asset {
 		$this->version = $version;
@@ -172,7 +153,6 @@ class Asset {
 	 * Set the asset dependencies.
 	 *
 	 * @param string[] $dependencies Dependencies to set.
-	 * @return Asset
 	 */
 	public function dependencies( array $dependencies ): Asset {
 		$this->deps = $dependencies;
@@ -183,7 +163,6 @@ class Asset {
 	 * Add a dependency to the asset.
 	 *
 	 * @param string $dependency Dependency to add.
-	 * @return Asset
 	 */
 	public function add_dependency( string $dependency ): Asset {
 		$this->deps[] = $dependency;
@@ -194,7 +173,6 @@ class Asset {
 	 * Set the asset handle.
 	 *
 	 * @param string $handle Handle to set.
-	 * @return Asset
 	 */
 	public function handle( string $handle ): Asset {
 		$this->handle = $handle;
@@ -205,7 +183,6 @@ class Asset {
 	 * Set the asset URL.
 	 *
 	 * @param string $src URL to set.
-	 * @return Asset
 	 */
 	public function src( string $src = '' ): Asset {
 		$this->src = $src;
@@ -216,7 +193,6 @@ class Asset {
 	 * Set the media to use for style assets.
 	 *
 	 * @param string $media Media to set.
-	 * @return Asset
 	 */
 	public function media( string $media = '' ): Asset {
 		$this->media = $media;
@@ -227,7 +203,6 @@ class Asset {
 	 * Tell the asset whether or not to load on the frontend.
 	 *
 	 * @param bool $load True if this should load on the frontend of the site.
-	 * @return Asset
 	 */
 	public function frontend( bool $load ): Asset {
 		$this->frontend = $load;
@@ -236,8 +211,6 @@ class Asset {
 
 	/**
 	 * Tell the asset to only load on the front-end
-	 *
-	 * @return Asset
 	 */
 	public function only_frontend(): Asset {
 		return $this
@@ -250,7 +223,6 @@ class Asset {
 	 * Tell the asset whether or not to load in the admin area.
 	 *
 	 * @param bool $load True if this should load in the admin area of the site.
-	 * @return Asset
 	 */
 	public function admin( bool $load ): Asset {
 		$this->admin = $load;
@@ -259,8 +231,6 @@ class Asset {
 
 	/**
 	 * Tell the asset to only load in the admin area.
-	 *
-	 * @return Asset
 	 */
 	public function only_admin(): Asset {
 		return $this
@@ -273,7 +243,6 @@ class Asset {
 	 * Tell the asset whether or not to load in the block editor
 	 *
 	 * @param bool $load True if this should load in the block editor.
-	 * @return Asset
 	 */
 	public function block_editor( bool $load ): Asset {
 		$this->block_editor = $load;
@@ -282,8 +251,6 @@ class Asset {
 
 	/**
 	 * Tell the asset to only load in the block editor.
-	 *
-	 * @return Asset
 	 */
 	public function only_block_editor(): Asset {
 		return $this
@@ -383,10 +350,10 @@ class Asset {
 				)
 			);
 
-		$handle = str_replace( [ '/', '.' ], '-', esc_attr( $this->handle ) );
+		$handle = str_replace( [ '/', '.' ], '-', (string) esc_attr( $this->handle ) );
 
 		// Ensure the handle doesn't start with a dash.
-		if ( 0 === strpos( $handle, '-' ) ) {
+		if ( str_starts_with( $handle, '-' ) ) {
 			$handle = substr( $handle, 1 );
 		}
 
