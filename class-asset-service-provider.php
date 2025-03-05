@@ -18,10 +18,10 @@ class Asset_Service_Provider extends Service_Provider {
 	/**
 	 * Register the service provider.
 	 */
-	public function register() {
+	public function register(): void {
 		$this->app->singleton_if(
 			'asset.manager',
-			fn() => new Asset_Manager(),
+			fn () => new Asset_Manager(),
 		);
 
 		$this->app->alias( 'asset.manager', Asset_Manager::class );
@@ -41,7 +41,7 @@ class Asset_Service_Provider extends Service_Provider {
 	protected function load_blocks(): void {
 		foreach ( $this->app['asset.loader']->blocks() as $file ) {
 			if ( file_exists( $file ) && 0 === validate_file( $file ) ) {
-				require_once $file;
+				require_once $file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 			}
 		}
 	}

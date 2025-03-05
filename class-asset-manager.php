@@ -9,8 +9,8 @@
 
 namespace Mantle\Assets;
 
-use Asset_Manager_Preload;
-use Asset_Manager_Scripts;
+use Alley\WP\Asset_Manager\Preload as Asset_Manager_Preload;
+use Alley\WP\Asset_Manager\Scripts as Asset_Manager_Scripts;
 use Mantle\Contracts\Assets\Asset_Manager as Asset_Manager_Contract;
 use Mantle\Contracts\Assets\Load_Method;
 
@@ -46,7 +46,6 @@ class Asset_Manager implements Asset_Manager_Contract {
 	 * @param string          $load_method Load method.
 	 * @param string          $load_hook Load hook.
 	 * @param string|null     $version Script version.
-	 * @return Asset
 	 */
 	public function style( ...$params ): Asset {
 		return new Asset( 'style', ...$params );
@@ -65,7 +64,6 @@ class Asset_Manager implements Asset_Manager_Contract {
 	 * @param string      $media Media to preload, defaults to 'all'.
 	 * @param bool        $crossorigin Flag to load as cross origin, defaults to false.
 	 * @param string|null $version Handle version, optional.
-	 * @return void
 	 */
 	public function preload(
 		string $handle,
@@ -79,7 +77,7 @@ class Asset_Manager implements Asset_Manager_Contract {
 	): void {
 		hook_callable(
 			'wp_enqueue_scripts',
-			fn() => Asset_Manager_Preload::instance()->add_asset(
+			fn () => Asset_Manager_Preload::instance()->add_asset(
 				[
 					'handle'      => $handle,
 					'src'         => $src,
@@ -98,12 +96,11 @@ class Asset_Manager implements Asset_Manager_Contract {
 	 * Asynchronously load a script file.
 	 *
 	 * @param string $handle Handle to change.
-	 * @return void
 	 */
 	public function async( string $handle ): void {
 		hook_callable(
 			'wp_enqueue_scripts',
-			fn() => Asset_Manager_Scripts::instance()->modify_load_method( $handle, Load_Method::ASYNC ),
+			fn () => Asset_Manager_Scripts::instance()->modify_load_method( $handle, Load_Method::ASYNC ),
 			20, // Ensures the asset is registered.
 		);
 	}
@@ -112,12 +109,11 @@ class Asset_Manager implements Asset_Manager_Contract {
 	 * Defer a script file
 	 *
 	 * @param string $handle Handle to change.
-	 * @return void
 	 */
 	public function defer( string $handle ): void {
 		hook_callable(
 			'wp_enqueue_scripts',
-			fn() => Asset_Manager_Scripts::instance()->modify_load_method( $handle, Load_Method::DEFER ),
+			fn () => Asset_Manager_Scripts::instance()->modify_load_method( $handle, Load_Method::DEFER ),
 			20, // Ensures the asset is registered.
 		);
 	}
@@ -127,12 +123,11 @@ class Asset_Manager implements Asset_Manager_Contract {
 	 *
 	 * @param string $handle Handle to change.
 	 * @param string $load_method Load method to change to.
-	 * @return void
 	 */
 	public function load_method( string $handle, string $load_method = Load_Method::SYNC ): void {
 		hook_callable(
 			'wp_enqueue_scripts',
-			fn() => Asset_Manager_Scripts::instance()->modify_load_method( $handle, $load_method ),
+			fn () => Asset_Manager_Scripts::instance()->modify_load_method( $handle, $load_method ),
 			20, // Ensures the asset is registered.
 		);
 	}
